@@ -60,9 +60,21 @@ php artisan queue:work --stop-when-empty
 
 ### Tests
 
-The feature tests run against MySQL (the search relies on window functions and the reservation flow
-on `SELECT ... FOR UPDATE`). `phpunit.xml` points at the `test` database and `RefreshDatabase` rebuilds
-it, so **do not aim it at a database with data you care about**.
+The feature tests run against MySQL rather than SQLite, because the search relies on window functions
+and the booking flow on `SELECT ... FOR UPDATE` — the two things worth verifying on the engine that
+actually ships.
+
+They use their own database. `RefreshDatabase` starts a run with `migrate:fresh`, which drops every
+table in whatever database it is pointed at, so it must never share one with the application. Create it
+once:
+
+```sql
+CREATE DATABASE test_testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+`phpunit.xml` already points at `test_testing` and reuses the host and credentials from `.env`. There is
+nothing to migrate by hand — the suite builds the schema itself, and the application database is left
+untouched.
 
 ```bash
 php artisan test
