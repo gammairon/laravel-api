@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Supplier extends Model
+{
+    /** @use HasFactory<\Database\Factories\SupplierFactory> */
+    use HasFactory;
+
+    protected $fillable = ['code', 'name'];
+
+    /** @return HasMany<Import, $this> */
+    public function imports(): HasMany
+    {
+        return $this->hasMany(Import::class);
+    }
+
+    /** @return HasMany<Offer, $this> */
+    public function offers(): HasMany
+    {
+        return $this->hasMany(Offer::class);
+    }
+}
